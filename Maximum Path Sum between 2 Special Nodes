@@ -1,0 +1,46 @@
+Given a binary tree in which each node element contains a number. Find the maximum possible path sum from one special node to another special node.
+
+Note: Here special node is a node which is connected to exactly one different node.
+
+class TreeNode:
+    def __init__(self, value=0, left=None, right=None):
+        self.value = value
+        self.left = left
+        self.right = right
+
+class MaxPathSum:
+    def __init__(self):
+        self.max_sum = float('-inf')
+
+def findMaxPathSum(root):
+    max_path = MaxPathSum()
+
+    def maxPathSumHelper(node):
+        if not node:
+            return 0
+
+        # Recursively calculate the maximum path sums for the left and right subtrees.
+        left_sum = max(0, maxPathSumHelper(node.left))
+        right_sum = max(0, maxPathSumHelper(node.right))
+
+        # Calculate the maximum path sum that passes through the current node.
+        current_sum = left_sum + right_sum + node.value
+
+        # Update the global maximum path sum.
+        max_path.max_sum = max(max_path.max_sum, current_sum)
+
+        # Return the maximum path sum for the subtree rooted at the current node.
+        return max(left_sum, right_sum) + node.value
+
+    maxPathSumHelper(root)
+    return max_path.max_sum
+
+# Example usage:
+root = TreeNode(-10)
+root.left = TreeNode(9)
+root.right = TreeNode(20)
+root.right.left = TreeNode(15)
+root.right.right = TreeNode(7)
+
+result = findMaxPathSum(root)
+print(result)  # Output: 42 (The path is 15 -> 20 -> 7)
